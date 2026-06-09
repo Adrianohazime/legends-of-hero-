@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nevasca Vol. 1 — A Primeira Tempestade | Legends of Heroes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;900&family=Orbitron:wght@700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+
+    /* ===== CABEÇALHO DO VOLUME ===== */
+    .volume-hero {
+      min-height: 50vh;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 6rem 2rem 3rem;
+      background:
+        linear-gradient(to bottom, transparent 30%, var(--dark) 100%),
+        linear-gradient(135deg, #050d1a, #0a1f3d, #0d2a4a, #1a3a6b);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .volume-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-conic-gradient(
+        from 0deg at 50% 50%,
+        transparent 0deg, transparent 4deg,
+        rgba(0,200,255,0.02) 4deg, rgba(0,200,255,0.02) 5deg
+      );
+      animation: spin 80s linear infinite;
+    }
+
+    .volume-hero::after {
+      content: '❄';
+      position: absolute;
+      font-size: 20rem;
+      opacity: 0.03;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .volume-hero-content { position: relative; z-index: 2; }
+
+    .volume-series {
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .volume-number {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: rgba(240,244,255,0.4);
+      margin-bottom: 0.8rem;
+    }
+
+    .volume-title {
+      font-family: 'Bangers', cursive;
+      font-size: clamp(2.5rem, 8vw, 5.5rem);
+      letter-spacing: 5px;
+      color: var(--white);
+      text-shadow: 0 0 40px rgba(0,200,255,0.5);
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    .volume-desc {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: rgba(240,244,255,0.6);
+      max-width: 500px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.7;
+    }
+
+    .volume-stats {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .volume-stat {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(240,244,255,0.4);
+    }
+
+    .volume-stat span { color: var(--blue); }
+
+    /* ===== LISTA DE CAPÍTULOS ===== */
+    .chapters-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+    }
+
+    .chapters-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(0,200,255,0.15);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .chapters-header-title {
+      font-family: 'Bangers', cursive;
+      font-size: 1.5rem;
+      letter-spacing: 3px;
+      color: var(--white);
+    }
+
+    .chapters-header-count {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(240,244,255,0.4);
+    }
+
+    /* CARD DE CAPÍTULO */
+    .chapter-item {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.2rem 1.5rem;
+      background: var(--card-bg);
+      border: 1px solid rgba(0,200,255,0.1);
+      border-radius: 4px;
+      margin-bottom: 0.8rem;
+      text-decoration: none;
+      color: var(--white);
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chapter-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--blue);
+      transform: scaleY(0);
+      transition: transform 0.2s;
+      transform-origin: bottom;
+    }
+
+    .chapter-item:hover {
+      border-color: var(--blue);
+      background: rgba(0,200,255,0.05);
+      transform: translateX(4px);
+    }
+
+    .chapter-item:hover::before { transform: scaleY(1); }
+
+    /* Capítulo bloqueado (em breve) */
+    .chapter-item.locked {
+      opacity: 0.45;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .chapter-item.locked::before { background: rgba(240,244,255,0.2); }
+
+    .chapter-number {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--blue);
+      min-width: 48px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .chapter-item.locked .chapter-number { color: rgba(240,244,255,0.3); }
+
+    .chapter-info { flex: 1; }
+
+    .chapter-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .chapter-preview {
+      font-size: 0.78rem;
+      color: rgba(240,244,255,0.45);
+      font-style: italic;
+    }
+
+    .chapter-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+
+    .chapter-tag {
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border-radius: 2px;
+    }
+
+    .tag-new {
+      background: rgba(0,200,255,0.15);
+      color: var(--blue);
+      border: 1px solid rgba(0,200,255,0.3);
+    }
+
+    .tag-soon {
+      background: rgba(255,255,255,0.05);
+      color: rgba(240,244,255,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .chapter-read-time {
+      font-size: 0.72rem;
+      color: rgba(240,244,255,0.3);
+      letter-spacing: 1px;
+    }
+
+    /* ===== BOTÃO VOLTAR ===== */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      color: rgba(240,244,255,0.5);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .back-btn:hover { color: var(--blue); }
+
+    /* ===== OUTROS VOLUMES ===== */
+    .other-volumes {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(0,200,255,0.1);
+    }
+
+    .other-volumes-title {
+      font-family: 'Bangers', cursive;
+      font-size: 1.3rem;
+      letter-spacing: 3px;
+      color: var(--white);
+      margin-bottom: 1.2rem;
+    }
+
+    .other-volumes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .other-vol-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 4px;
+      text-decoration: none;
+      color: var(--white);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .other-vol-card:hover {
+      border-color: var(--blue);
+      transform: translateY(-3px);
+    }
+
+    .other-vol-icon { font-size: 2rem; }
+
+    .other-vol-info {}
+
+    .other-vol-series {
+      font-size: 0.7rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.2rem;
+    }
+
+    .other-vol-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="../index.html" class="nav-logo">LEGENDS <span>OF</span> HEROES</a>
+    <ul>
+      <li><a href="../index.html#home">Início</a></li>
+      <li><a href="../index.html#personagens">Heróis</a></li>
+      <li><a href="../index.html#timeline">Universo</a></li>
+      <li><a href="../index.html#historias">Histórias</a></li>
+    </ul>
+  </nav>
+
+  <!-- CABEÇALHO DO VOLUME -->
+  <div class="volume-hero">
+    <div class="volume-hero-content">
+      <div class="volume-series">❄ Nevasca</div>
+      <div class="volume-number">VOLUME 01</div>
+      <h1 class="volume-title">A Primeira Tempestade</h1>
+      <p class="volume-desc">
+        2450. Uma explosão muda tudo. Kagura Frost nunca imaginou que seus pulmões fracos e mãos trêmulas se tornariam a menor de suas preocupações.
+      </p>
+      <div class="volume-stats">
+        <div class="volume-stat"><span>📅</span> Ano 2450</div>
+        <div class="volume-stat"><span>📖</span> 10 Capítulos</div>
+        <div class="volume-stat"><span>⚔️</span> Vilão: Blaze</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTA DE CAPÍTULOS -->
+  <div class="chapters-wrapper">
+
+    <a href="../index.html#historias" class="back-btn">← Voltar para Histórias</a>
+
+    <div class="chapters-header">
+      <div class="chapters-header-title">Capítulos</div>
+      <div class="chapters-header-count">1 de 10 disponíveis</div>
+    </div>
+
+    <!-- 
+      =====================================================
+      CAPÍTULOS DISPONÍVEIS — troque "locked" por "" 
+      quando publicar um novo capítulo
+      Troque o href pelo caminho correto do arquivo
+      =====================================================
+    -->
+
+    <a href="nevasca-cap1.html" class="chapter-item">
+      <div class="chapter-number">01</div>
+      <div class="chapter-info">
+        <div class="chapter-name">O dia em que tudo congelou</div>
+        <div class="chapter-preview">Escreva aqui uma prévia de uma linha do capítulo...</div>
+      </div>
+      <div class="chapter-right">
+        <span class="chapter-tag tag-new">Novo</span>
+        <span class="chapter-read-time">~5 min</span>
+      </div>
+    </a>
+
+    <div class="chapter-item locked">
+      <div class="chapter-number">02</div>
+      <div class="chapter-info">
+        <div class="chapter-name">Capítulo 2</div>
+        <div class="chapter-preview">Em breve...</div>
+      </div>
+      <div class="chapter-right">
+        <span class="chapter-tag tag-soon">Em Breve</span>
+      </div>
+    </div>
+
+    <div class="chapter-item locked">
+      <div class="chapter-number">03</div>
+      <div class="chapter-info">
+        <div class="chapter-name">Capítulo 3</div>
+        <div class="chapter-preview">Em breve...</div>
+      </div>
+      <div class="chapter-right">
+        <span class="chapter-tag tag-soon">Em Breve</span>
+      </div>
+    </div>
+
+    <div class="chapter-item locked">
+      <div class="chapter-number">04</div>
+      <div class="chapter-info">
+        <div class="chapter-name">Capítulo 4</div>
+        <div class="chapter-preview">Em breve...</div>
+      </div>
+      <div class="chapter-right">
+        <span class="chapter-tag tag-soon">Em Breve</span>
+      </div>
+    </div>
+
+    <div class="chapter-item locked">
+      <div class="chapter-number">05</div>
+      <div class="chapter-info">
+        <div class="chapter-name">Capítulo 5</div>
+        <div class="chapter-preview">Em breve...</div>
+      </div>
+      <div class="chapter-right">
+        <span class="chapter-tag tag-soon">Em Breve</span>
+      </div>
+    </div>
+
+    <div class="chapter-item locked">
+      <div class="chapter-number">06</div>
+      <div class="chapter-info">
+        <div class="chapter-name">Capítulo 6</div>
+        <div class="chapter-preview">Em breve...</div>
+      </div>
+      <div class="chapter-right">
+        <span class="chapter-tag tag-soon">Em Breve</span>
+      </div>
+    </div>
+
+    <div class="chapter-item locked">
+      <div class="chapter-number">07</div>
+      <div class="chapter-info">
+        <div class="chapter-name">Capítulo 7</div>
+        <div class="chapter-preview">Em breve...</div>
+      </div>
+      <div class="chapter-right">
+        <span class="chapter-tag tag-soon">Em Breve</span>
+      </div>
+    </div>
+
+    <div class="chapter-item locked">
+      <div class="chapter-number">08</div>
+      <div class="chapter-info">
+        <div class="chapter-name">Capítulo 8</div>
+        <div class="chapter-preview">Em breve...</div>
+      </div>
+      <div class="chapter-right">
+        <span class="chapter-tag tag-soon">Em Breve</span>
+      </div>
+    </div>
+
+    <div class="chapter-item locked">
+      <div class="chapter-number">09</div>
+      <div class="chapter-info">
+        <div class="chapter-name">Capítulo 9</div>
+        <div class="chapter-preview">Em breve...</div>
+      </div>
+      <div class="chapter-right">
+        <span class="chapter-tag tag-soon">Em Breve</span>
+      </div>
+    </div>
+
+    <div class="chapter-item locked">
+      <div class="chapter-number">10</div>
+      <div class="chapter-info">
+        <div class="chapter-name">Capítulo 10 — Final do Volume</div>
+        <div class="chapter-preview">Em breve...</div>
+      </div>
+      <div class="chapter-right">
+        <span class="chapter-tag tag-soon">Em Breve</span>
+      </div>
+    </div>
+
+    <!-- OUTROS VOLUMES -->
+    <div class="other-volumes">
+      <div class="other-volumes-title">Outros Volumes</div>
+      <div class="other-volumes-grid">
+
+        <a href="#" class="other-vol-card">
+          <div class="other-vol-icon">🌸</div>
+          <div class="other-vol-info">
+            <div class="other-vol-series">Violet</div>
+            <div class="other-vol-name">Vol. 1 — Em Breve</div>
+          </div>
+        </a>
+
+        <a href="#" class="other-vol-card">
+          <div class="other-vol-icon">🌊</div>
+          <div class="other-vol-info">
+            <div class="other-vol-series">Oceânica</div>
+            <div class="other-vol-name">Vol. 1 — Em Breve</div>
+          </div>
+        </a>
+
+        <a href="#" class="other-vol-card">
+          <div class="other-vol-icon">⚡</div>
+          <div class="other-vol-info">
+            <div class="other-vol-series">Speed</div>
+            <div class="other-vol-name">Vol. 1 — Em Breve</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">LEGENDS OF HEROES</div>
+    <p class="footer-text">Um universo criado com imaginação. Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="../script.js"></script>
+
+</body>
+</html>
